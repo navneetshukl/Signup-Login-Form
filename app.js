@@ -76,8 +76,39 @@ app.route("/signup")
 app.route("/signin")
 
 .get(function(req,res){
-    res.sendFile()
+    res.sendFile(__dirname+"/signin.html");
 })
+.post(function(req,res){
+    const email1=req.body.email;
+    const password1=req.body.password;
+    user.findOne({email: email1},function(err,foundUser){
+        if(err){
+            res.send("Sorry there was some error");
+        }
+        else{
+            if(foundUser==null)
+            {
+                res.send("No User Found");
+
+            }
+            else{
+                user.findOne({password: password1},function(err,newUser){
+                    if(err){
+                        res.send("Sorry there was some error");
+                    }
+                    else{
+                        if(newUser==null){
+                            res.send("Password is wrong");
+                        }
+                        else{
+                            res.send("<h1>Hi "+ newUser.username+ " </h1");
+                        }
+                    }
+                });
+            }
+        }
+    });
+});
 
 app.listen(3000,function(){
     console.log("The Server started at port 3000");
